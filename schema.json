@@ -1,0 +1,52 @@
+{
+  "class": "Livros",
+  "description": "Dados do documento PDF",
+  "moduleConfig": {
+    "text2vec-transformers": {
+      "poolingStrategy": "masked_mean",
+      "vectorizeClassName": false
+    }
+  },
+  "properties": [
+    {
+      "dataType": [
+        "text"
+      ],
+      "description": "Conteúdo do documento PDF",
+      "moduleConfig": {
+        "text2vec-transformers": {
+          "skip": false,
+          "vectorizePropertyName": false
+        }
+      },
+      "name": "content"
+    },
+    {
+      "dataType": [
+        "text"
+      ],
+      "description": "",
+      "moduleConfig": {
+        "text2vec-transformers": {
+          "skip": false,
+          "vectorizePropertyName": false
+        }
+      },
+      "name": "source"
+    },
+    {
+      "dataType": [
+        "text"
+      ],
+      "description": "",
+      "moduleConfig": {
+        "text2vec-transformers": {
+          "skip": false,
+          "vectorizePropertyName": false
+        }
+      },
+      "name": "page"
+    }
+  ],
+  "vectorizer": "none"
+}
