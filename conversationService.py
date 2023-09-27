@@ -49,6 +49,14 @@ Resposta:
 prompt = PromptPattern.from_str(pt1)
 
 def get_embedding(sentence: str,):
+  """_summary_
+
+  Args:
+      sentence (str): texto para gerar os embeddings
+
+  Returns:
+      _type_: List[Tensor] | ndarray | Tensor
+  """
   embeddings = model_embedding.encode(sentence)
   
   return embeddings
