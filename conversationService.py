@@ -1,8 +1,7 @@
 from dotenv import load_dotenv
+from genai import PromptPattern
 import loggingService
-from genai.credentials import Credentials
 from genai.model import Credentials, Model
-from genai.prompt_pattern import PromptPattern
 from genai.schemas import GenerateParams
 import os
 from sentence_transformers import SentenceTransformer
@@ -81,6 +80,8 @@ def get_context(query: str, certainty= 0.8, limit = 4) -> str:
   .do()
   )
   
+  # print(result)
+  
   retorno = ''
   if len(result['data']['Get'][class_name]) == 0:
     return retorno
@@ -112,6 +113,7 @@ def get_llm_response(question: str, prompt = prompt) -> str:
 
 if __name__ == '__main__':
   print(get_llm_response('onde mora dom casmurro'))
+  # print(get_embedding('onde mora dom casmurro'))
   # print(get_llm_response('por que o personagem se chama dom casmurro'))
   # print(get_llm_response('o que significa casmurro'))
   # print(client.query
