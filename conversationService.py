@@ -36,14 +36,12 @@ params = GenerateParams(
 model = Model(model=model_name, credentials=creds, params=params)
 
 # depois extrair para arquivo
-pt1 = """Responda a pergunta de forma sucinta usando o contexto fornecido. Caso não tenha certeza da resposta siceramente diga que não possui informações suficientes sobre esse tema:
-                     
-Contexto: {{contexto}}
+pt1 = """Responda a pergunta a seguir de forma sucinta usando o contexto fornecido. Caso não tenha certeza da resposta siceramente diga que não possui informações suficientes sobre esse tema.
 
-Pergunta: {{questao}}
+{{context}}
 
-Resposta: 
-"""
+Pergunta: {{question}}
+Resposta:"""
 
 prompt = PromptPattern.from_str(pt1)
 
@@ -74,7 +72,7 @@ def get_context(query: str, certainty= 0.8, limit = 4) -> str:
   .with_additional(["certainty", "distance"]) # note that certainty is only supported if distance==cosine
   .with_near_vector({
     "vector": get_embedding(query),
-    # "certainty": certainty
+    "certainty": certainty
   })
   .with_limit(limit)
   .do()
@@ -83,9 +81,10 @@ def get_context(query: str, certainty= 0.8, limit = 4) -> str:
   # print(result)
   
   retorno = ''
+  class_name = 'Livros'
+  
   if len(result['data']['Get'][class_name]) == 0:
     return retorno
-  
   retorno = result['data']['Get'][class_name][0]['content']
   
   for contexto in result['data']['Get'][class_name][1:]:
@@ -97,7 +96,8 @@ def get_llm_response(question: str, prompt = prompt) -> str:
   resposta = ''
   
   contexto = get_context(question)
-  prompt.sub('contexto', contexto).sub('questao', question)
+  prompt.sub('context', contexto).sub('question', question)
+  print(contexto)
   
   logger.debug(prompt)
   logger.debug('-' * 39)
