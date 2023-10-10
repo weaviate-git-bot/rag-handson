@@ -1,3 +1,4 @@
+import unicodedata
 from dotenv import load_dotenv
 from conversationService import get_embedding
 from langchain.document_loaders import PyPDFDirectoryLoader
@@ -19,8 +20,63 @@ pages = []
 pdf_loader = PyPDFDirectoryLoader(path)
 text_splitter = RecursiveCharacterTextSplitter(chunk_size = 1000, chunk_overlap = 20, separators=['\n', '\n \n', '\n \n \n' ])
 documents = pdf_loader.load_and_split(text_splitter=text_splitter)
+
+class_document = {
+      "class": "Livros",
+      "description": "Dados do documento PDF",
+      "moduleConfig": {
+        "text2vec-transformers": {
+          "poolingStrategy": "masked_mean",
+          "vectorizeClassName": False
+        }
+      },
+      "properties": [
+        {
+          "dataType": [
+            "text"
+          ],
+          "description": "Conteúdo do documento PDF",
+          "moduleConfig": {
+            "text2vec-transformers": {
+              "skip": False,
+              "vectorizePropertyName": False
+            }
+          },
+          "name": "content"
+        },
+        {
+          "dataType": [
+            "text"
+          ],
+          "description": "",
+          "moduleConfig": {
+            "text2vec-transformers": {
+              "skip": False,
+              "vectorizePropertyName": False
+            }
+          },
+          "name": "source"
+        },
+        {
+          "dataType": [
+            "text"
+          ],
+          "description": "",
+          "moduleConfig": {
+            "text2vec-transformers": {
+              "skip": False,
+              "vectorizePropertyName": False
+            }
+          },
+          "name": "page"
+        }
+      ],
+      "vectorizer": "text2vec-transformers"
+      # "vectorizer": "none"
+    }
   
-logger.info(len(documents))
+print(len(documents))
+# logger.info(len(documents))
     
 def pdf_text_splitter(pdf_text) -> str:
   retorno = {'content': '', 'source': '', 'page': 0}
@@ -39,40 +95,43 @@ def load_documents():
   logger.info(len(pages))
 
 def populate_db():
-  # client.schema.create_class(class_document)
-  # client.schema.delete_class('Livros')
+  client.schema.delete_class('Livros')
+  client.schema.create_class(class_document)
   load_documents()
   
-  client.batch.configure(batch_size=10)  # Configure batch
+  client.batch.configure(batch_size=5)  # Configure batch
   with client.batch as batch:
     i = 0
+    batch.configure(batch_size=5)  # Configure batch
     
     for page in pages:
       logger.info(f"importing question: {i+1}")
       i = i+1
       
       properties = {
-        "content": page["content"],
+        "content": unicodedata.normalize("NFKD", page["content"]),
         "page": str(page["page"]),
         "source": page["source"],
       }
       
-      vector = get_embedding(page["content"])
+      # vector = get_embedding(page["content"])
 
-      client.batch.add_data_object(properties, 'Livros', vector=vector)
+      # batch.add_data_object(properties, 'Livros', vector=vector)
+      batch.add_data_object(properties, 'Livros')
 
 if __name__ == '__main__':
   # populate_db()
-  vector = get_embedding('o que significa casmurro')
-  print(vector)
-  print(len(vector))
+  # vector = get_embedding('por que arthur dent foi despejado?')
+  # print(vector)
+  # print(len(vector))
   result = (client.query
     .get('Livros', ["content", "source", "page"])
     .with_additional(["certainty", "distance"]) # note that certainty is only supported if distance==cosine
-    .with_near_vector({
-      "vector": vector,
-      "certainty": 0.8
-    })
+    # .with_near_vector({
+      # "vector": vector,
+      # "certainty": 0.8
+    # })
+    .with_near_text({'concepts': 'por que arthur dent foi despejado?', 'certainty': 0.6})
     .with_limit(4)
     .do()
   )

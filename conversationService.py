@@ -1,3 +1,4 @@
+import unicodedata
 from dotenv import load_dotenv
 from genai import PromptPattern
 import loggingService
@@ -17,11 +18,11 @@ weaviate_url = os.getenv("WEAVIATE_URL", 'http://127.0.0.1:8080')
 client = weaviate.Client(
     url=weaviate_url,
 )
-model_embedding = SentenceTransformer(model_name_embedding)
 print(model_name_embedding)
+model_embedding = SentenceTransformer(model_name_embedding)
 
 api_key = os.getenv("GENAI_KEY", None)
-api_endpoint = os.getenv("GENAI_API", 'https://workbench-api.res.ibm.com/v1')
+api_endpoint = os.getenv("GENAI_API", 'https://workbench-api.res.ibm.com')
 model_name = os.getenv('MODEL_NAME', 'bigscience/mt0-xxl')
 creds = Credentials(api_key, api_endpoint=api_endpoint)
 params = GenerateParams(
@@ -70,10 +71,11 @@ def get_context(query: str, certainty= 0.8, limit = 4) -> str:
   result = (client.query
   .get('Livros', ["content", "source", "page"])
   .with_additional(["certainty", "distance"]) # note that certainty is only supported if distance==cosine
-  .with_near_vector({
-    "vector": get_embedding(query),
-    "certainty": certainty
-  })
+  # .with_near_vector({
+  #   "vector": get_embedding(query),
+  #   "certainty": certainty
+  # })
+  .with_near_text({'concepts': query, 'certainty': 0.6})
   .with_limit(limit)
   .do()
   )
@@ -88,7 +90,7 @@ def get_context(query: str, certainty= 0.8, limit = 4) -> str:
   retorno = result['data']['Get'][class_name][0]['content']
   
   for contexto in result['data']['Get'][class_name][1:]:
-    retorno += f"\n{contexto['content']}"
+    retorno += unicodedata.normalize("NFKD", f"\n{contexto['content']}")
   
   return retorno
 
@@ -97,10 +99,9 @@ def get_llm_response(question: str, prompt = prompt) -> str:
   
   contexto = get_context(question)
   prompt.sub('context', contexto).sub('question', question)
-  print(contexto)
   
-  logger.debug(prompt)
-  logger.debug('-' * 39)
+  logger.info(prompt)
+  logger.info('-' * 39)
 
   respostas =model.generate([prompt])
   retorno = ''
@@ -112,10 +113,9 @@ def get_llm_response(question: str, prompt = prompt) -> str:
   
 
 if __name__ == '__main__':
-  print(get_llm_response('onde mora dom casmurro'))
-  # print(get_embedding('onde mora dom casmurro'))
-  # print(get_llm_response('por que o personagem se chama dom casmurro'))
-  # print(get_llm_response('o que significa casmurro'))
+  print(get_llm_response('por que arthur dent deitou na lama?'))
+  # print(get_context('por que arthur dent deitou na lama?'))
+
   # print(client.query
   #   .aggregate("Livros")
   #   .with_fields("meta { count }")

@@ -22,7 +22,7 @@ model_embedding = SentenceTransformer(model_name_embedding)
 print(model_name_embedding)
 
 api_key = os.getenv("GENAI_KEY", None)
-api_endpoint = os.getenv("GENAI_API", 'https://workbench-api.res.ibm.com/v1')
+api_endpoint = os.getenv("GENAI_API", 'https://workbench-api.res.ibm.com')
 model_name = os.getenv('MODEL_NAME', 'bigscience/mt0-xxl')
 creds = Credentials(api_key, api_endpoint=api_endpoint)
 params = GenerateParams(
@@ -48,10 +48,10 @@ Resposta:
 
 prompt = PromptPattern.from_str(pt1)
 
-def get_embedding(sentence: str,):
-  embeddings = model_embedding.encode(sentence)
+# def get_embedding(sentence: str,):
+#   embeddings = model_embedding.encode(sentence)
   
-  return embeddings
+#   return embeddings
 
 def get_context(query: str, certainty= 0.8, limit = 4) -> str:
   """_summary_
@@ -65,9 +65,13 @@ def get_context(query: str, certainty= 0.8, limit = 4) -> str:
   result = (client.query
   .get('Livros', ["content", "source", "page"])
   .with_additional(["certainty", "distance"]) # note that certainty is only supported if distance==cosine
-  .with_near_vector({
-    "vector": get_embedding(query),
-    # "certainty": certainty
+  # .with_near_vector({
+  #   "vector": get_embedding(query),
+  #   # "certainty": certainty
+  # })
+  .with_near_text({
+    "concepts":query,
+    "certainty": certainty
   })
   .with_limit(limit)
   .do()
@@ -103,7 +107,7 @@ def get_llm_response(question: str, prompt = prompt) -> str:
   
 
 if __name__ == '__main__':
-  print(get_llm_response('onde mora dom casmurro'))
+  print(get_llm_response('por que arthur dent foi despejado?'))
   # print(get_llm_response('por que o personagem se chama dom casmurro'))
   # print(get_llm_response('o que significa casmurro'))
   # print(client.query
