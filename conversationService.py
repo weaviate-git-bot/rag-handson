@@ -13,13 +13,11 @@ logger = loggingService.get_logger()
 
 class_name = os.getenv("WEVIATE_CLASS", 'Livros')
 path = os.getenv("DATA_PATH", "data")
-model_name_embedding = os.getenv("MODEL_NAME_EMBEDDING", "sentence-transformers/gtr-t5-large")
+
 weaviate_url = os.getenv("WEAVIATE_URL", 'http://127.0.0.1:8080')
 client = weaviate.Client(
     url=weaviate_url,
 )
-print(model_name_embedding)
-model_embedding = SentenceTransformer(model_name_embedding)
 
 api_key = os.getenv("GENAI_KEY", None)
 api_endpoint = os.getenv("GENAI_API", 'https://workbench-api.res.ibm.com')
@@ -46,19 +44,6 @@ Resposta:"""
 
 prompt = PromptPattern.from_str(pt1)
 
-def get_embedding(sentence: str,):
-  """_summary_
-
-  Args:
-      sentence (str): texto para gerar os embeddings
-
-  Returns:
-      _type_: List[Tensor] | ndarray | Tensor
-  """
-  embeddings = model_embedding.encode(sentence)
-  
-  return embeddings
-
 def get_context(query: str, certainty= 0.8, limit = 4) -> str:
   """_summary_
 
@@ -71,10 +56,6 @@ def get_context(query: str, certainty= 0.8, limit = 4) -> str:
   result = (client.query
   .get('Livros', ["content", "source", "page"])
   .with_additional(["certainty", "distance"]) # note that certainty is only supported if distance==cosine
-  # .with_near_vector({
-  #   "vector": get_embedding(query),
-  #   "certainty": certainty
-  # })
   .with_near_text({'concepts': query, 'certainty': 0.6})
   .with_limit(limit)
   .do()
