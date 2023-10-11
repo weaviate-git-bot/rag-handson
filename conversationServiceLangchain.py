@@ -23,13 +23,9 @@ api_endpoint = os.getenv("GENAI_API", 'https://workbench-api.res.ibm.com')
 class_name ='Livros'
 memory = ConversationBufferMemory(memory_key="chat_history",input_key="question", output_key='answer', return_messages=True)
 model_name = os.getenv('MODEL_NAME', 'bigscience/mt0-xxl')
-model_name_embedding = os.getenv("MODEL_NAME_EMBEDDING", "sentence-transformers/gtr-t5-large")
 weaviate_url = os.getenv("WEAVIATE_URL", 'http://127.0.0.1:8080')
 
-print(model_name_embedding)
 client = weaviate.Client(url=weaviate_url,)
-embeddings = SentenceTransformer(model_name_embedding)
-model_embedding = SentenceTransformer(model_name_embedding)
 
 creds = Credentials(api_key, api_endpoint=api_endpoint)
 params = GenerateParams(
@@ -64,24 +60,11 @@ prompt = PromptTemplate(
 retriver = vector_store.as_retriever(search_kwargs={'score_threshold': 0.6})
 qa = ConversationalRetrievalChain.from_llm(llm=llm, retriever=retriver, memory=memory, combine_docs_chain_kwargs={"prompt": prompt}, verbose=True)
 
-def get_embedding(sentence: str,):
-  """_summary_
-
-  Args:
-      sentence (str): texto para gerar os embeddings
-
-  Returns:
-      _type_: List[Tensor] | ndarray | Tensor
-  """
-  embeddings = model_embedding.encode(sentence)
-  
-  return embeddings
-
-def get_llm_response(query: str) -> str:
+def get_llm_response(query: str, history) -> str:
     resposta = qa.run(query)
     
     return resposta
-    
 
 # print(get_llm_response('por que arthur dent foi despejado?'))
-print(get_llm_response('por que a terra foi destruída?'))
+if __name__ == '__main__':
+    print(get_llm_response('por que a casa do arthur dent ia ser demolida?'))
