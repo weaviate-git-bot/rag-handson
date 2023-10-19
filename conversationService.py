@@ -27,10 +27,10 @@ model_name_embedding = os.getenv("MODEL_NAME_EMBEDDING", "sentence-transformers/
 creds = Credentials(api_key, api_endpoint=api_endpoint)
 params = GenerateParams(
     decoding_method="sample",
-    max_new_tokens=100,
-    min_new_tokens=1,
+    max_new_tokens=150,
+    min_new_tokens=5,
     stream=False,
-    temperature=0.8,
+    temperature=0.7,
     top_k=50,
     top_p=1,
 )
@@ -40,7 +40,7 @@ model = Model(model=model_name, credentials=creds, params=params)
 model_embedding = SentenceTransformer(model_name_embedding)
 
 # depois extrair para arquivo
-pt1 = """Responda a pergunta a seguir de forma sucinta usando o contexto fornecido. Caso não tenha certeza da resposta siceramente diga que não possui informações suficientes sobre esse tema.
+pt1 = """Responda a pergunta de forma sucinta usando o contexto fornecido. Caso não tenha certeza da resposta siceramente diga que não possui informações suficientes sobre esse tema.
 
 Contexto: {{context}}
 
@@ -118,7 +118,7 @@ def get_llm_response(question: str, hisotry = [], prompt = prompt) -> str:
 
 if __name__ == '__main__':
   print(get_llm_response('por que a casa do arthur dent ia ser demolida?'))
-  # print(get_context('por que arthur dent deitou na lama?'))
+  # print(get_llm_response('quem era o pensador profundo?'))
 
   # print(client.query
   #   .aggregate("Livros")
