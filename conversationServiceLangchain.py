@@ -43,7 +43,7 @@ llm = LangChainInterface(model=model_name, credentials=creds, params=params)
 vector_store = Weaviate(client=client, index_name='Livros', text_key='content')
 
 
-pt1 = """Responda a pergunta a seguir de forma sucinta usando o contexto e histórico fornecidos. Caso não tenha certeza da resposta siceramente diga que não possui informações suficientes sobre esse tema.
+pt1 = """Responda a pergunta a seguir de forma sucinta usando o contexto e histórico fornecidos. Caso não tenha certeza da resposta sinceramente diga que não possui informações suficientes sobre esse tema.
 
 Contexto: {context}
 

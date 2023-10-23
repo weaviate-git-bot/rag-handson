@@ -40,7 +40,7 @@ model = Model(model=model_name, credentials=creds, params=params)
 model_embedding = SentenceTransformer(model_name_embedding)
 
 # depois extrair para arquivo
-pt1 = """Responda a pergunta de forma sucinta usando o contexto fornecido. Caso não tenha certeza da resposta siceramente diga que não possui informações suficientes sobre esse tema.
+pt1 = """Responda a pergunta de forma sucinta usando o contexto fornecido. Caso não tenha certeza da resposta sinceramente diga que não possui informações suficientes sobre esse tema.
 
 Contexto: {{context}}
 
