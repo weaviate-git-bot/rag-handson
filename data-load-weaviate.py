@@ -1,6 +1,5 @@
 import unicodedata
 from dotenv import load_dotenv
-from conversationService import get_embedding
 from langchain.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import loggingService
@@ -114,16 +113,11 @@ def populate_db():
         "source": page["source"],
       }
       
-      # vector = get_embedding(page["content"])
-
-      # batch.add_data_object(properties, 'Livros', vector=vector)
       batch.add_data_object(properties, 'Livros')
 
 if __name__ == '__main__':
   # populate_db()
-  # vector = get_embedding('por que arthur dent foi despejado?')
-  # print(vector)
-  # print(len(vector))
+  
   result = (client.query
     .get('Livros', ["content", "source", "page"])
     .with_additional(["certainty", "distance"]) # note that certainty is only supported if distance==cosine

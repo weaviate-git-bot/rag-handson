@@ -19,7 +19,6 @@ logger = loggingService.get_logger()
 
 api_key = os.getenv("GENAI_KEY", None)
 api_endpoint = os.getenv("GENAI_API", 'https://workbench-api.res.ibm.com')
-# class_name = os.getenv("WEVIATE_CLASS", 'LivrosVectorizer')
 class_name ='Livros'
 memory = ConversationBufferMemory(memory_key="chat_history",input_key="question", output_key='answer', return_messages=True)
 model_name = os.getenv('MODEL_NAME', 'bigscience/mt0-xxl')
@@ -65,6 +64,6 @@ def get_llm_response(query: str, history) -> str:
     
     return resposta
 
-# print(get_llm_response('por que arthur dent foi despejado?'))
 if __name__ == '__main__':
     print(get_llm_response('por que a casa do arthur dent ia ser demolida?'))
+    # print(get_llm_response('por que arthur dent foi despejado?'))

@@ -85,43 +85,11 @@ def populate_db():
     metadatas=metadata,
     ids=ids,
   )
-# def get_context(query: str, certainty= 0.8, limit = 4) -> str:
-#   """_summary_
-
-#   Args:
-#       query (str): _description_
-#       certainty (float, optional): _description_. Defaults to 0.8.
-#       limit (int, optional): _description_. Defaults to 4.
-#   """
-  
-#   result = (client.query
-#   .get('Livros', ["content", "source", "page"])
-#   .with_additional(["certainty", "distance"]) # note that certainty is only supported if distance==cosine
-#   .with_near_vector({
-#     "vector": get_embedding(query),
-#     "certainty": certainty
-#   })
-#   .with_limit(limit)
-#   .do()
-#   )
-  
-#   print(result['data']['Get'][class_name])
-  
-#   retorno = ''
-#   if len(result['data']['Get'][class_name]) == 0:
-#     return retorno
-  
-#   retorno = result['data']['Get'][class_name][0]['content']
-  
-#   for contexto in result['data']['Get'][class_name][1:]:
-#     retorno += f"\n{contexto['content']}"
-  
-#   return retorno
 
 if __name__ == '__main__':
   # populate_db()
   collection = client.get_collection('Livros')
-  query_embeddings = get_embedding("onde dom casmurro morava?").tolist()
+  query_embeddings = get_embedding("por que arthur dent foi despejado?").tolist()
   print(type(query_embeddings))
   
   results = collection.query(
