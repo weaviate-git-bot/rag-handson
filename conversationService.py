@@ -35,9 +35,8 @@ params = GenerateParams(
     top_p=1,
 )
 
-embeddings = SentenceTransformer(model_name_embedding)
+embeddings_model = SentenceTransformer(model_name_embedding)
 model = Model(model=model_name, credentials=creds, params=params)
-model_embedding = SentenceTransformer(model_name_embedding)
 
 # depois extrair para arquivo
 pt1 = """Responda a pergunta de forma sucinta usando o contexto fornecido. Caso não tenha certeza da resposta sinceramente diga que não possui informações suficientes sobre esse tema.
@@ -57,7 +56,7 @@ def get_embedding(sentence: str,):
   Returns:
       _type_: List[Tensor] | ndarray | Tensor
   """
-  embeddings = model_embedding.encode(sentence)
+  embeddings = embeddings_model.encode(sentence)
   
   return embeddings
 
