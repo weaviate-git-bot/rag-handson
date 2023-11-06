@@ -1,9 +1,42 @@
-# rag-handson
+# RAG HandsOn
 
-## Weaviate
+## Pré-requisitos
+
+- Docker daemon/cli client 
+- Miniconda
+- Git
+- VSCode
+
+### Conda
+
+1. Criar ambiente virtual
+```shell
+conda create --name ml -c conda-forge python=3.11
+conda activate ml
+```
+
+2. Instalar dependências
+```shell
+conda install -c conda-forge jupyter pandas numpy sentence-transformers huggingface torch tensorflow 
+pip install -U ibm-generative-ai "ibm-generative-ai[langchain]" pypdf readchar weaviate-client python-dotenv langchain
+```
+
+3. Testar dependências
+```shell
+curl -LJO https://github.com/vanildo/rag-handson/raw/main/configTest.py
+python ./configTest.py
+```
+
+### Weaviate
 
 - Site: <https://weaviate.io>
 - Github: <https://github.com/weaviate/weaviate>
+- Baixar o arquivo ```docker-compose.yml```
+
+```shell
+curl -LJO https://github.com/vanildo/rag-handson/raw/main/docker-compose.yml
+```
+
 - Comando para rodar local:
 
 ```shell
@@ -15,7 +48,3 @@ para rodar o docker compose com suporte a persistência, tem que cria a pasta __
 ```shell
 mkdir weaviate_data
 ```
-
-## Testar
-
-- rufimelo/bert-large-portuguese-cased-sts
