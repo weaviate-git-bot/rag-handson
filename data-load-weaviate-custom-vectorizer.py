@@ -1,6 +1,6 @@
 import unicodedata
 from dotenv import load_dotenv
-from conversationServiceLangchain import get_embedding
+from conversationService import get_embedding
 from langchain.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import loggingService
