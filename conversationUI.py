@@ -26,7 +26,7 @@ signal.signal(signal.SIGINT, handler)
 text_box = gr.Textbox("Pergunta: ")
 demo = gr.ChatInterface(
     get_llm_response,
-    title="Mochileiro das Galáxias WatsonX",
+    title="RAG Hands On",
     textbox=text_box,
     submit_btn=gr.Button("Perguntar"),
     retry_btn=gr.Button("Tentar novamente"),
