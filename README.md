@@ -2,7 +2,7 @@
 
 ## Pré-requisitos
 
-- Docker daemon/cli client 
+- Docker daemon/cli client
 - Miniconda
 - Git
 - VSCode
@@ -17,8 +17,8 @@ conda activate ml
 
 2. Instalar dependências
 ```shell
-conda install -c conda-forge jupyter pandas numpy sentence-transformers huggingface torch tensorflow 
-pip install -U ibm-generative-ai "ibm-generative-ai[langchain]" pypdf readchar weaviate-client python-dotenv langchain
+conda install -c conda-forge jupyter pandas numpy sentence-transformers tensorflow 
+pip install -U ibm-generative-ai "ibm-generative-ai[langchain]" pypdf readchar weaviate-client python-dotenv langchain huggingface torch
 ```
 
 3. Testar dependências
@@ -48,3 +48,7 @@ para rodar o docker compose com suporte a persistência, tem que cria a pasta __
 ```shell
 mkdir weaviate_data
 ```
+
+## Elasticsearch
+
+- <https://www.elastic.co/guide/en/elasticsearch/reference/current/date.html>
