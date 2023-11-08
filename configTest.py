@@ -4,7 +4,6 @@ from langchain.document_loaders import PyPDFDirectoryLoader
 from genai.extensions.langchain import LangChainInterface
 from langchain.memory import ConversationBufferMemory
 from sentence_transformers import SentenceTransformer
-from conversationService import get_llm_response
 from langchain.vectorstores import Weaviate
 from genai.model import Credentials, Model
 from genai.schemas import GenerateParams
@@ -13,7 +12,6 @@ from langchain import PromptTemplate
 from genai import PromptPattern
 from dotenv import load_dotenv
 from logging import Logger
-import loggingService
 import gradio as gr
 import unicodedata
 import weaviate

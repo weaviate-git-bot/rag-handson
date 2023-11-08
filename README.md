@@ -18,7 +18,7 @@ conda activate ml
 2. Instalar dependências
 ```shell
 conda install -c conda-forge jupyter pandas numpy sentence-transformers tensorflow 
-pip install -U ibm-generative-ai "ibm-generative-ai[langchain]" pypdf readchar weaviate-client python-dotenv langchain huggingface torch
+pip install -U ibm-generative-ai "ibm-generative-ai[langchain]" pypdf readchar weaviate-client python-dotenv langchain huggingface torch gradio chromadb
 ```
 
 3. Testar dependências
