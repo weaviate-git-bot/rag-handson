@@ -1,4 +1,3 @@
-import unicodedata
 from dotenv import load_dotenv
 from genai import PromptPattern
 import loggingService
@@ -6,6 +5,7 @@ from genai.model import Credentials, Model
 from genai.schemas import GenerateParams
 import os
 from sentence_transformers import SentenceTransformer
+import unicodedata
 import weaviate
 
 load_dotenv()

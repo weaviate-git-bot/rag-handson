@@ -1,27 +1,25 @@
-import unicodedata
 from dotenv import load_dotenv
+from elasticsearch import Elasticsearch
 from genai import PromptPattern
 import loggingService
 from genai.model import Credentials, Model
 from genai.schemas import GenerateParams
 import os
 from sentence_transformers import SentenceTransformer
-import weaviate
+import unicodedata
 
 load_dotenv()
 logger = loggingService.get_logger()
 
-chat_history = [] # histórico do chat
 class_name = os.getenv("WEVIATE_CLASS", 'Livros')
 path = os.getenv("DATA_PATH", "data")
-
-weaviate_url = os.getenv("WEAVIATE_URL", 'http://127.0.0.1:8080')
-client = weaviate.Client(
-    url=weaviate_url,
-)
+elastic_url = os.getenv("ELASTICSEARCH_URL", "http://127.0.0.1:9200")
+index_name = os.getenv("INDEX_NAME", 'vector_index')
 
 api_key = os.getenv("GENAI_KEY", None)
 api_endpoint = os.getenv("GENAI_API", 'https://workbench-api.res.ibm.com')
+client = Elasticsearch(hosts=[elastic_url])
+chat_history = [] # histórico do chat
 model_name = os.getenv('MODEL_NAME', 'bigscience/mt0-xxl')
 model_name_embedding = os.getenv("MODEL_NAME_EMBEDDING", "sentence-transformers/gtr-t5-large")
 creds = Credentials(api_key, api_endpoint=api_endpoint)
@@ -71,29 +69,29 @@ def get_context(query: str, certainty= 0.6, limit = 4) -> str:
       limit (int, optional): _description_. Defaults to 4.
   """
   
-  result = (client.query
-  .get('LivrosVectorizer', ["content", "source", "page"])
-  .with_additional(["certainty", "distance"]) # note that certainty is only supported if distance==cosine
-  # .with_near_text({'concepts': query, 'certainty': 0.6})
-  .with_near_vector({
-      "vector": get_embedding(query),
-      "certainty": certainty
-    })
-  .with_limit(limit)
-  .do()
-  )
-  
+  query = {
+    "field": "embedding",
+    "query_vector": get_embedding("quais são as vantagens do plano TIM CONTROLE GIGA C PROMO"),
+    "k": 4,
+    "num_candidates": 10,
+  }
+  source = ['commercialCode', 'plan', 'description', 'dataFranchise',
+       'voiceFranchise', 'smsFranchise', 'socialNetworkFranchise', 'mecanism',
+       'segment', 'upsellDescription', 'planValues', 'status',
+       'roamingInternacional', 'text']
+
+  result = client.search(index=index_name, knn=query, source=source)  
   # print(result)
   
   retorno = ''
-  class_name = 'LivrosVectorizer'
   
-  if len(result['data']['Get'][class_name]) == 0:
+  if len(result["hits"]["hits"]) == 0:
     return retorno
-  retorno = result['data']['Get'][class_name][0]['content']
   
-  for contexto in result['data']['Get'][class_name][1:]:
-    retorno += unicodedata.normalize("NFKD", f"\n{contexto['content']}")
+  retorno = result.get("hits").get("hits")[0].get("_source").get("text")
+  
+  for contexto in result["hits"]["hits"][1:]:
+    retorno += unicodedata.normalize("NFKD", f"\n{contexto.get('_source').get('text')}")
   
   return retorno
 
@@ -116,7 +114,7 @@ def get_llm_response(question: str, hisotry = [], prompt = prompt) -> str:
   
 
 if __name__ == '__main__':
-  print(get_llm_response('por que a casa do arthur dent ia ser demolida?'))
+  print(get_llm_response('quais são as vantagens do plano TIM CONTROLE GIGA C PROMO?'))
   # print(get_llm_response('quem era o pensador profundo?'))
 
   # print(client.query
