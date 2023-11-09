@@ -52,3 +52,9 @@ mkdir weaviate_data
 ## Elasticsearch
 
 - <https://www.elastic.co/guide/en/elasticsearch/reference/current/date.html>
+
+### Rodar Elasticsearch local
+
+```shell
+docker run -d --name elasticsearch --net elastic -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e ES_JAVA_OPTS="-Xms1g -Xmx1g" -e xpack.security.enabled=false -it elasticsearch:8.11.0
+```
