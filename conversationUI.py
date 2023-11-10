@@ -1,4 +1,5 @@
-from conversationService import get_llm_response
+# from conversationService import get_llm_response
+from conversationServiceElastic import get_llm_response
 import gradio as gr
 import readchar
 import signal
