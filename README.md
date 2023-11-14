@@ -53,25 +53,16 @@ docker compose up -d
 curl -LJO https://github.com/vanildo/rag-handson/raw/main/docker-compose-weaviate.yml
 ```
 
-- Comando para rodar local:
-
-```shell
-docker compose -f ./docker-compose-weaviate.yml up -d
-```
-
 para rodar o docker compose com suporte a persistência, tem que cria a pasta __weaviate_data__.
 
 ```shell
 mkdir weaviate_data
 ```
 
-## Elasticsearch
-
-- <https://www.elastic.co/guide/en/elasticsearch/reference/current/date.html>
-- <https://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html>
-
-### Rodar Elasticsearch local
+- Comando para rodar local:
 
 ```shell
-docker run -d --name elasticsearch --net elastic -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e ES_JAVA_OPTS="-Xms1g -Xmx1g" -e xpack.security.enabled=false -it elasticsearch:8.11.0
+docker compose -f ./docker-compose-weaviate.yml up -d
 ```
+
+
