@@ -52,6 +52,7 @@ mkdir weaviate_data
 ## Elasticsearch
 
 - <https://www.elastic.co/guide/en/elasticsearch/reference/current/date.html>
+- <https://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html>
 
 ### Rodar Elasticsearch local
 
