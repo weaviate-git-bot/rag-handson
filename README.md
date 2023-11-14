@@ -27,20 +27,36 @@ curl -LJO https://github.com/vanildo/rag-handson/raw/main/configTest.py
 python ./configTest.py
 ```
 
-### Weaviate
 
-- Site: <https://weaviate.io>
-- Github: <https://github.com/weaviate/weaviate>
+## Elasticsearch
+
+- <https://www.elastic.co/guide/en/elasticsearch/reference/current/date.html>
 - Baixar o arquivo ```docker-compose.yml```
 
 ```shell
 curl -LJO https://github.com/vanildo/rag-handson/raw/main/docker-compose.yml
 ```
 
-- Comando para rodar local:
+### Rodar Elasticsearch local
 
 ```shell
 docker compose up -d
+```
+
+### Weaviate (Opcional - alternativa ao ElasticSearch)
+
+- Site: <https://weaviate.io>
+- Github: <https://github.com/weaviate/weaviate>
+- Baixar o arquivo ```docker-compose.yml```
+
+```shell
+curl -LJO https://github.com/vanildo/rag-handson/raw/main/docker-compose-weaviate.yml
+```
+
+- Comando para rodar local:
+
+```shell
+docker compose -f ./docker-compose-weaviate.yml up -d
 ```
 
 para rodar o docker compose com suporte a persistência, tem que cria a pasta __weaviate_data__.
